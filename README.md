@@ -46,19 +46,28 @@ if (result != 0 || pCMe->m_pIEcoCalculatorX == 0) {
 
 ```C
   /* Проверка и получение запрошенного интерфейса */
-  if ( IsEqualUGUID(riid, &IID_IEcoCalculatorX) ) {
+    if (IsEqualUGUID(riid, &IID_IEcoLab1) ) {
+        *ppv = &pCMe->m_pVTblIEcoLab1;
+        pCMe->m_pVTblIEcoLab1->AddRef((IEcoLab1*)pCMe);
+    }
+    else if (IsEqualUGUID(riid, &IID_IEcoCalculatorX)) {
+        if (pCMe->m_pIUnkOuter != 0) {
+            return pCMe->m_pIUnkOuter->pVTbl->QueryInterface(pCMe->m_pIUnkOuter, riid, ppv);
+    }
+    else {
         *ppv = &pCMe->m_pVTblIEcoCalculatorX;
-        pCMe->m_pVTblIEcoCalculatorX->AddRef((IEcoCalculatorX*)pCMe);
     }
-  else if ( IsEqualUGUID(riid, &IID_IEcoCalculatorY) ) {
+        pCMe->m_pVTblIEcoLab1->AddRef((IEcoLab1*) pCMe);
+    }
+    else if (IsEqualUGUID(riid, &IID_IEcoCalculatorY)) {
         *ppv = &pCMe->m_pVTblIEcoCalculatorY;
-        pCMe->m_pVTblIEcoCalculatorY->AddRef((IEcoCalculatorX*)pCMe);
+        pCMe->m_pVTblIEcoLab1->AddRef((IEcoLab1*) pCMe);
     }
-  else if ( IsEqualUGUID(riid, &IID_IEcoUnknown) ) {
-        *ppv = &pCMe->m_pVTblIEcoCalculatorY;
-        pCMe->m_pVTblIEcoCalculatorY->AddRef((IEcoCalculatorX*)pCMe);
+    else if (IsEqualUGUID(riid, &IID_IEcoUnknown) ) {
+        *ppv = &pCMe->m_pVTblIEcoLab1;
+        pCMe->m_pVTblIEcoLab1->AddRef((IEcoLab1*)pCMe);
     }
-  else {
+    else {
         *ppv = 0;
         return -1;
     }
