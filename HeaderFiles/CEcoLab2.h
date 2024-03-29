@@ -27,7 +27,7 @@ typedef struct CEcoLab2 {
     /* Системный интерфейс */
     IEcoSystem1* m_pISys;
 
-/* Указатель на интерфейс IEcoCalculatorX включаемого компонента */
+    /* Указатель на интерфейс IEcoCalculatorX включаемого компонента */
     IEcoCalculatorX* m_pIEcoCalculatorX;
 
     /* Указатель на интерфейс IEcoCalculatorY включаемого компонента */

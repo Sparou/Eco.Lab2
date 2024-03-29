@@ -252,8 +252,11 @@ int16_t EcoMain(IEcoUnknown* pIUnk) {
     result = pIEcoLab2->pVTbl->QueryInterface(pIEcoLab2, &IID_IEcoCalculatorX, (void**)&pIEcoCalculatorX);
     printf("Addition result: %d\n", pIEcoCalculatorX->pVTbl->Addition(pIEcoCalculatorX, a,b));
 
-    result = pIEcoLab2->pVTbl->QueryInterface(pIEcoLab2, &IID_IEcoCalculatorY, (void**)&pIEcoCalculatorY);
-    printf("Multiply result: %d\n", pIEcoCalculatorY->pVTbl->Multiplication(pIEcoCalculatorY, a,b));
+    //result = pIEcoLab2->pVTbl->QueryInterface(pIEcoLab2, &IID_IEcoCalculatorY, (void**)&pIEcoCalculatorY);
+    //printf("Multiply result: %d\n", pIEcoCalculatorY->pVTbl->Multiplication(pIEcoCalculatorY, a, b));
+
+    result = pIEcoCalculatorX->pVTbl->QueryInterface(pIEcoCalculatorX, &IID_IEcoCalculatorY, (void**)&pIEcoCalculatorY);
+    printf("Multiply result: %d\n", pIEcoCalculatorY->pVTbl->Multiplication(pIEcoCalculatorY, a, b));
 
     /* Агрегирование */
     result = pIEcoLab2->pVTbl->QueryInterface(pIEcoLab2, &IID_IEcoLab1, (void**)&pIEcoLab1);
