@@ -72,3 +72,36 @@ if (result != 0 || pCMe->m_pIEcoCalculatorX == 0) {
         return -1;
     }
 ```
+## Агрегирование
+
+Для реализации метода агрегирования было создано решение **CEcoLab2**, которое агрегирует **CEcoLab1**.  Для этого в **CEcoLab1** был добавлен указатель **m_pIUnkOuter** на агрегирующий компонент:
+
+```C
+/* Делегирующий IEcoUnknown, указывает на внешний или неделегирующий IEcoUnknown */
+IEcoUnknown* m_pIUnkOuter;
+```
+Далее, в функции **CEcoLab1_QueryInterface** управление передается агрегирующему компоненту:
+
+```C
+if (pCMe->m_pIUnkOuter != 0) {
+      return pCMe->m_pIUnkOuter->pVTbl->QueryInterface(pCMe->m_pIUnkOuter, riid, ppv);
+    }
+```
+В свою очередь, в **CEcoLab2** добавлен указатель на **IEcoUnknown** внутреннего компонента:
+
+```C
+/* Указатель на IEcoUnknown внутреннего компонента */
+IEcoUnknown* m_pInnerUnknown;
+```
+Он получается во время инициализации **CEcoLab2** в функции **initCEcoLab2**:
+
+```C
+/* Получение интерфейса внутреннего компонента "Eco.Lab1" c поддержкой агрегирования */
+result = pIBus->pVTbl->QueryComponent(pIBus, &CID_EcoLab1, pOuterUnknown,  &IID_IEcoUnknown,(void**) &pCMe->m_pInnerUnknown);
+```
+В **EcoLab2.UnitTes**t мы получаем указатель на интерфейс **IEcoLab1**, благодаря чему можем использовать реализуемый в нем метод **qsort**:
+```C
+/* Агрегирование */
+result = pIEcoLab2->pVTbl->QueryInterface(pIEcoLab2, &IID_IEcoLab1, (void**)&pIEcoLab1);
+```
+
