@@ -187,8 +187,8 @@ int16_t EcoMain(IEcoUnknown* pIUnk) {
     IEcoLab1* pIEcoLab1 = 0;
 
     int16_t result = 0;
-    int16_t a = 3;
-    int16_t b = 96;
+    int16_t a = 1;
+    int16_t b = 1;
 
     // Тестируемые массивы
     int* arr_int_for_timsort;
@@ -249,21 +249,37 @@ int16_t EcoMain(IEcoUnknown* pIUnk) {
         goto Release; /* Освобождение интерфейсов в случае ошибки */
     }
 
+    
+    printf("Input a & b values -> ");
+    scanf_s("%d%d", &a, &b);
+
+    // Демонстрация включения компонента X;
     result = pIEcoLab2->pVTbl->QueryInterface(pIEcoLab2, &IID_IEcoCalculatorX, (void**)&pIEcoCalculatorX);
-    printf("Addition result: %d\n", pIEcoCalculatorX->pVTbl->Addition(pIEcoCalculatorX, a,b));
+    if (pIEcoCalculatorX != 0) {
+        printf("Interface X has been successfully connected!\nAddition result: %d\n", pIEcoCalculatorX->pVTbl->Addition(pIEcoCalculatorX, a,b));
+    } else {
+        printf("Interface X has not been connected!\n");
+    }
 
-    //result = pIEcoLab2->pVTbl->QueryInterface(pIEcoLab2, &IID_IEcoCalculatorY, (void**)&pIEcoCalculatorY);
-    //printf("Multiply result: %d\n", pIEcoCalculatorY->pVTbl->Multiplication(pIEcoCalculatorY, a, b));
-
+    // Деомнстрация включения компонента Y, который мы получаем через компонент X
     result = pIEcoCalculatorX->pVTbl->QueryInterface(pIEcoCalculatorX, &IID_IEcoCalculatorY, (void**)&pIEcoCalculatorY);
-    printf("Multiply result: %d\n", pIEcoCalculatorY->pVTbl->Multiplication(pIEcoCalculatorY, a, b));
+    if (pIEcoCalculatorX != 0) {
+        printf("Interface Y has been successfully connected!\nMultiply result: %d\n", pIEcoCalculatorY->pVTbl->Multiplication(pIEcoCalculatorY, a,b));
+    } else {
+        printf("Interface Y has not been connected!\n");
+    }
 
-    /* Агрегирование */
+    // Демонстрация агрегирования компонента EcoLab1
     result = pIEcoLab2->pVTbl->QueryInterface(pIEcoLab2, &IID_IEcoLab1, (void**)&pIEcoLab1);
+    if (pIEcoLab1 == 0) {
+        printf("Interface EcoLab1 has not been connected!\n");
+        return 0; 
+    } else {
+        printf("Interface EcoLab1 has been successfully connected!\n");
+    }
 
     printf("Input array size -> ");
     scanf_s("%d", &arr_size);
-
 
     arr_int_for_timsort = createIntArray(pIMem, arr_size);
     arr_float_for_timsort = createFloatArray(pIMem, arr_size);
@@ -363,6 +379,7 @@ int16_t EcoMain(IEcoUnknown* pIUnk) {
     pIMem->pVTbl->Free(pIMem, arr_char_for_qsort);
     pIMem->pVTbl->Free(pIMem, arr_string_for_qsort);
 
+    scanf_s("%d", &a);
 
 Release:
 
@@ -380,6 +397,10 @@ Release:
     if (pIEcoLab2 != 0) {
         pIEcoLab2->pVTbl->Release(pIEcoLab2);
     }
+
+    if (pIEcoLab1 != 0) pIEcoLab1->pVTbl->Release(pIEcoLab1);
+    if (pIEcoCalculatorX != 0) pIEcoCalculatorX->pVTbl->Release(pIEcoCalculatorX);
+    if (pIEcoCalculatorY != 0) pIEcoCalculatorY->pVTbl->Release(pIEcoCalculatorY);
 
     /* Освобождение системного интерфейса */
     if (pISys != 0) {

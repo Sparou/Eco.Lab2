@@ -134,7 +134,6 @@ int16_t ECOCALLMETHOD initCEcoLab2(/*in*/ struct IEcoLab2* me, /* in */ struct I
     }
 
     /* Получение интерфейса внутреннего компонента "Eco.Lab1" c поддержкой агрегирования */
-    /* ВАЖНО: При агрегировании мы передаем IID IEcoUnknown */
     result = pIBus->pVTbl->QueryComponent(pIBus, &CID_EcoLab1, pOuterUnknown, &IID_IEcoUnknown,(void**) &pCMe->m_pInnerUnknown);
 
     /* Освобождение */
